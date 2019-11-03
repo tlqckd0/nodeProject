@@ -3,9 +3,16 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
 require('dotenv').config();
-const app = express();
 
-const router = require('./routes/index');
+
+var router = require('./routes/index');
+var user = require('./routes/users')
+var sequelize = require('./models').sequelize;
+
+
+const app = express();
+sequelize.sync();
+
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
 app.set('port',process.env.PORT||8080);
