@@ -5,9 +5,9 @@ const path = require('path');
 require('dotenv').config();
 
 
-var router = require('./routes/index');
-var user = require('./routes/users')
-var sequelize = require('./models').sequelize;
+const router = require('./routes/index');
+const user = require('./routes/users')
+const {sequelize} = require('./models');
 
 
 const app = express();

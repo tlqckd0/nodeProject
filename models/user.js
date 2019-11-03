@@ -1,0 +1,29 @@
+module.exports = (sequeluze, DataTypes) =>{
+    return sequeluze.define('user',{
+        email:{
+            type:DataTypes.STRING(40),
+            allownull:false,
+            unique:true,
+        },
+        nick:{
+            type:DataTypes.STRING(20),
+            allownull:false,
+        },
+        password:{
+            type:DataTypes.STRING(100),
+            allownull:true,
+        },
+        provider:{
+            type:DataTypes.STRING(10),
+            allownull:false,
+            defaultValue:'local'
+        },
+        snsId:{
+            type:DataTypes.STRING(30),
+            allowNull:true
+        },
+    },{
+        timestamps:true,
+        paranoid:true
+    })
+}
