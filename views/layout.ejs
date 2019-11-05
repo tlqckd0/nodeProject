@@ -1,2 +1,35 @@
-<h1>TITLE</h1>
-<div> ㅋㅋ셈 </div>
+<br/>
+<hr>
+<div id="Layout">
+    <h1><a href="/" id="mainlink">Main</a></h1>
+    <hr>
+    <div class="menubar">
+        <ul>
+            <li><a href="/board">mainboard</a>
+                <ul>
+                    <li><a href="/board/1">Board1</a></li>
+                    <li><a href="/board/2">Board2</a></li>
+                </ul>
+            </li>
+            <li><a href="#">....</a></li>
+        </ul>
+    </div>
+    <div id="userInfo">userInfo..login
+        <%if(login != null){%>
+            <h1><%=user%></h1>
+        <%}else{%>
+            <form>
+                <table>
+                    <tr>
+                        <td><label for=email>email</label></td><td><input type="email" id=email name=email></td>
+                    </tr>
+                    <tr>
+                        <td><label for=password>password</label></td><td><input type="password" id=password name=password></td>
+                    </tr>
+                </table>
+            </form>
+        <%}%>
+    </div>    
+</div>
+<br/>
+<hr>

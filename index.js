@@ -6,7 +6,8 @@ require('dotenv').config();
 
 
 const router = require('./routes/index');
-const user = require('./routes/users')
+const user = require('./routes/users');
+const board = require('./routes/board');
 const {sequelize} = require('./models');
 
 
@@ -33,6 +34,8 @@ app.use(flash());
 
 
 app.use('/',router);
+//app.use('/user',user);
+app.use('/board',board);
 
 app.use((req,res,next)=>{
     const err=  new Error('Not Found');
@@ -44,7 +47,7 @@ app.use((err,req,res,next)=>{
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development'?err:{};
     res.status(err.status||500);
-    res.render('error');
+    res.render('error',{login:null,user:null});
 })
 
 app.listen(app.get('port'),()=>{

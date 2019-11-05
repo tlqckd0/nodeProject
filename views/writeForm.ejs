@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/css/layout.css" rel="stylesheet" type="text/css">
+    <title>Document</title>
+    <style>
+        textarea{
+            margin-top: 10px;
+            width: 631px;
+        }
+        #title{
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <% include ./layout %>
+    <div id="write">
+        <form method="post" action="#">
+            <!--일단 이건 가로 80프로-->
+            <span id="postTitle">title   </span>
+            <input type="text" name="title" id="title">
+            <textarea name="description" style="resize:none;" rows="30" ></textarea>
+            <input type="submit" value="Post">
+        </form>
+    </div>
+</body>
+</html>
