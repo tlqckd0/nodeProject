@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/css/layout.css" rel="stylesheet" type="text/css">
+    <title>Document</title>
+</head>
+<body>
+        <% include ./layout %>
+    
+    <div id="join">
+        <form method="POST" action="/auth/join">
+            <table>
+                <tr>
+                    <th><label for="email">Email</label></th>
+                    <td><input id="email" name="email" type="text" required="true"></td>
+                </tr>
+                <tr>
+                    <th><label for="password">Password</label></th>
+                    <td><input id="password" name="password" type="password" required="true"></td>
+                </tr>
+                <tr>
+                    <th><label for="nick">nick</label></th>
+                    <td><input id="nick" name="nick" type="text" required="true"></td>
+                </tr>
+            </table>
+            <input type="submit" value="가입하기!">
+        </form>
+    </div>
+</body>
+</html>

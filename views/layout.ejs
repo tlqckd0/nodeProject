@@ -1,6 +1,6 @@
-<br/>
-<hr>
+
 <div id="Layout">
+    <hr>
     <h1><a href="/" id="mainlink">Main</a></h1>
     <hr>
     <div class="menubar">
@@ -14,22 +14,33 @@
             <li><a href="#">....</a></li>
         </ul>
     </div>
-    <div id="userInfo">userInfo..login
-        <%if(login != null){%>
-            <h1><%=user%></h1>
+    <div id="userInfo">
+        <%if(user != null){%>
+            <h1><%=user.nick%>님</h1>
+            <a href="/auth/logout">로그아웃</a>
         <%}else{%>
-            <form>
+            <form id="loginForm" action="/auth/login" method="POST">
                 <table>
                     <tr>
-                        <td><label for=email>email</label></td><td><input type="email" id=email name=email></td>
+                        <th><label for=email>Email : </label></th>
+                        <td><input type="email" id=email name=email required="true"></td>
+                        <td rowspan="2">
+                            <input id="loginSubmit" type="submit" value="로그인">
+                        </td>
                     </tr>
                     <tr>
-                        <td><label for=password>password</label></td><td><input type="password" id=password name=password></td>
+                        <th><label for=password>Password : </label></th>
+                        <td><input type="password" id=password name=password  required="true"></td>
                     </tr>
                 </table>
+                
             </form>
+            <div id="joinMethod">
+                <a class="join" href="/join" >회원가입</a>
+                <a class="join" href="/auth/kakao">카카오 로그인</a>
+                <a class="join" href="/auth/naver">네이버 로그인</a>
+            </div>
         <%}%>
-    </div>    
+    </div> 
+    <hr>  
 </div>
-<br/>
-<hr>

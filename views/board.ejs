@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +9,20 @@
 </head>
 <body>
     <% include ./layout %>
-    <span>this is Board page </span>
-    <button class="write">글쓰기</button>
-    <div>
-        <table id="post-list">
-            <tr>
-                <td>no.</td><td>title</td><td>time</td>
-            </tr>
-        </table>
+    <div id=board>
+        <span>this is Board page </span>
+        <button class="write">글쓰기</button>
+        <div>
+            <table id="post-list">
+                <tr>
+                    <td>no.</td>
+                    <td>title</td>
+                    <td>time</td>
+                </tr>
+            </table>
+        </div>
     </div>
+
 </body>
 <script>
     document.querySelector('.write').addEventListener('click',()=>{

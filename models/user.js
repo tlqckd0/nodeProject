@@ -2,20 +2,20 @@ module.exports = (sequeluze, DataTypes) =>{
     return sequeluze.define('user',{
         email:{
             type:DataTypes.STRING(40),
-            allownull:false,
+            allowNull:false,
             unique:true,
         },
         nick:{
             type:DataTypes.STRING(20),
-            allownull:false,
+            allowNull:false,
         },
         password:{
             type:DataTypes.STRING(100),
-            allownull:true,
+            allowNull:true,
         },
         provider:{
             type:DataTypes.STRING(10),
-            allownull:false,
+            allowNull:false,
             defaultValue:'local'
         },
         snsId:{

@@ -1,18 +1,19 @@
 const express = require('express');
+const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
 const router = express.Router();
 
 router.get('/',(req,res,next)=>{
-    res.render('main',{user:'123',login:'123123'})
+    res.render('main',{user:req.user})
 })
 
 router.get('/:boardNum',(req,res,next)=>{
     const boardNum = req.params.boardNum;
-    res.render('board',{num:boardNum,user:null,login:null})
+    res.render('board',{num:boardNum,user:req.user})
 })
 
-router.get('/:borardNum/writeform',(req,res,next)=>{
+router.get('/:borardNum/writeform',isLoggedIn,(req,res,next)=>{
     const boardNum = req.params.boardNum;
-    res.render('writeForm',{num:boardNum,user:null,login:null})
+    res.render('writeForm',{num:boardNum,user:req.user})
 })
 
 module.exports = router

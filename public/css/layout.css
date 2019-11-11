@@ -1,8 +1,28 @@
-#layout{
-    display: flex;
+#Layout, #main, #index, #board, #error ,#write, #join{
+    width: 800px;
+    margin: auto;
 }
+.join{
+    margin: 10px;
+    border: black solid 1px;
+    background-color: powderblue;
+    padding: 5px;
+    border-radius: 3px;
+}
+table{
+    display: inline;
 
-
+}
+#loginForm{
+    margin-bottom: 20px;
+}
+#loginSubmit{
+    all:unset;
+    border: 1px grey solid;
+    height: 50px;
+    width: 50px;
+    border-radius: 3px;
+}
 a, a:hover, a:visited, a:active{
     text-decoration: none;
     color: rgb(9, 9, 102);;
@@ -102,7 +122,7 @@ a, a:hover, a:visited, a:active{
 
 #userInfo{
     width: 400px;
-    height: 150px;
+    height: 100px;
     border-radius: 30px;
     border: grey 1px solid;
     background-color: rgb(218, 216, 216);

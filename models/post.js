@@ -9,7 +9,7 @@ module.exports = (sequeluze, DataTypes) =>{
         },
         nick:{
             type:DataTypes.STRING(20),
-            allownull:false,
+            allowNull:false,
         },
         visited:{
             type:DataTypes.INTEGER.UNSIGNED,
@@ -17,7 +17,7 @@ module.exports = (sequeluze, DataTypes) =>{
         },
         type:{
             type:DataTypes.STRING(10),
-            allownull:false,
+            allowNull:false,
             defaultValue:'normal'
         },
         recommend:{
@@ -26,7 +26,7 @@ module.exports = (sequeluze, DataTypes) =>{
         },
         boardName:{
             type:DataTypes.STRING(20),
-            allownull:false,
+            allowNull:false,
         }
     },{
         timestamps:true,

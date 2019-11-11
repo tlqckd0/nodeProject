@@ -2,21 +2,26 @@ const express  = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 const path = require('path');
+const passport= require('passport');
 require('dotenv').config();
 
 
 const router = require('./routes/index');
-const user = require('./routes/users');
+const auth = require('./routes/auth');
 const board = require('./routes/board');
 const {sequelize} = require('./models');
-
+const passportConfig = require('./passport');
 
 const app = express();
+passportConfig(passport);
+
 sequelize.sync();
 
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
 app.set('port',process.env.PORT||8080);
+
+
 
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
@@ -30,11 +35,13 @@ app.use(session({
         secure:false
     }
 }));
-app.use(flash());
 
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/',router);
-//app.use('/user',user);
+app.use('/auth',auth);
 app.use('/board',board);
 
 app.use((req,res,next)=>{
@@ -47,7 +54,7 @@ app.use((err,req,res,next)=>{
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development'?err:{};
     res.status(err.status||500);
-    res.render('error',{login:null,user:null});
+    res.render('error',{user:req.user});
 })
 
 app.listen(app.get('port'),()=>{
