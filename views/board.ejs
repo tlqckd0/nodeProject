@@ -8,26 +8,10 @@
     <title>Board<%=num%></title>
 </head>
 <body>
+    <!-- 레이아웃-->
     <% include ./layout %>
-    <div id=board>
-        <span>this is Board page </span>
-        <button class="write">글쓰기</button>
-        <div>
-            <table id="post-list">
-                <tr>
-                    <td>no.</td>
-                    <td>title</td>
-                    <td>time</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
+    <!-- 게시글 리스트-->
+    <% include ./boardLayout %>
 </body>
-<script>
-    document.querySelector('.write').addEventListener('click',()=>{
-        const link = location.href+'/writeform';
-        location.replace(link);
-    })
-</script>
+
 </html>

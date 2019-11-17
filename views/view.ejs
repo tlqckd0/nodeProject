@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/css/layout.css" rel="stylesheet" type="text/css">
+    <link href="/css/view.css" rel="stylesheet" type="text/css">
+    <title><%=title%></title>
+</head>
+<body>
+    <!-- 레이아웃-->
+    <% include ./layout %>
+    <!-- 게시글 읽기!-->
+    <div id="post-Wrap">
+        <h3><span><%=post.title%></span></h3>
+        <hr>
+        <div id="discription">
+            <p>
+                <%=post.description%>
+            </p>
+        </div>
+        <hr>
+        <% if(user.nick === post.nick){%>
+            <form method="POST" action=<%="/board/"+num+"/delete/"+post.id%>>
+                <input type="hidden" name="userNick" value=<%=user.nick%>>
+                <input type="submit" value="삭제">
+            </form>
+        <%}%>
+        
+    </div>
+    <!-- 게시글 리스트-->
+    <% include ./boardLayout %>
+</body>
+</html>

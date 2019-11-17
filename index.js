@@ -54,7 +54,7 @@ app.use((err,req,res,next)=>{
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development'?err:{};
     res.status(err.status||500);
-    res.render('error',{user:req.user});
+    res.render('error',{user:req.user,err:res.locals.message});
 })
 
 app.listen(app.get('port'),()=>{

@@ -2,10 +2,11 @@ module.exports = (sequeluze, DataTypes) =>{
     return sequeluze.define('post',{
         title:{
             type:DataTypes.STRING(40),
-            allownull:false,
+            allowNull:false,
         },
         description:{
             type:DataTypes.STRING(1000),
+            allowNull:false,
         },
         nick:{
             type:DataTypes.STRING(20),
@@ -25,7 +26,7 @@ module.exports = (sequeluze, DataTypes) =>{
             defaultValue:0
         },
         boardName:{
-            type:DataTypes.STRING(20),
+            type:DataTypes.INTEGER.UNSIGNED,
             allowNull:false,
         }
     },{

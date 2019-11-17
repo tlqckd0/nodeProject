@@ -1,0 +1,36 @@
+<div id=board>
+    <span>this is Board page </span>
+    <button class="write">글쓰기</button>
+    <% postdata %>
+    <% length=postdata.length%>
+    <div>
+        <table id="post-list" border="1">
+            <tr>
+                <th>no.</th>
+                <th>title</th>
+                <th>nick</th>
+                <th>type</th>
+                <th>time</th>
+                <th>recommend</th>
+            </tr>
+            <% postdata.reverse().forEach(function(post){%>
+                    <tr>
+                        <td><%=length %></td>
+                        <td><a href=<%="/board/view/"+num+'/'+post.id %>><%= post.title %></a></td>
+                        <td><%=post.nick %></td>
+                        <td><%=post.type  %></td>
+                        <td><%=post.createdAt.toString().substring(15,25);  %></td>
+                        <td><%=post.recommend %></td>
+                    </tr>
+            <%length--; %>
+        <%})%>
+        </table>
+    </div>
+</div>
+<script>
+    document.querySelector('.write').addEventListener('click',()=>{
+        const link = location.href+'/writeform';
+        location.replace(link);
+    });
+
+</script>

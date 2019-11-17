@@ -19,13 +19,17 @@
 <body>
     <% include ./layout %>
     <div id="write">
-        <form method="post" action="/">
+        <form id="post" method="post" action="">
             <!--일단 이건 가로 80프로-->
             <span id="postTitle">title   </span>
-            <input type="text" name="title" id="title">
+            <input type="text" name="title" id="title" required="true">
             <textarea name="description" style="resize:none;" rows="30" ></textarea>
-            <input type="submit" value="Post">
+            <input type="submit" value="글쓰기">
         </form>
     </div>
 </body>
+<script>
+    const link = location.href;
+    document.getElementById("post").setAttribute(action,link);
+</script>
 </html>
