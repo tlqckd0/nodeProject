@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/css/layout.css" rel="stylesheet" type="text/css">
-    <title>WRITE POST</title>
+    <title>UPDATE POST</title>
     <style>
         textarea{
             margin-top: 10px;
@@ -19,12 +19,14 @@
 <body>
     <% include ./layout %>
     <div id="write">
-        <form id="post" method="post" action=<%="/board/"+num+"/writeform" %>>
+        <form id="get" method="post" action=<%="/board/"+num+"/update" %>>
             <!--일단 이건 가로 80프로-->
             <span id="postTitle">title   </span>
-            <input type="text" name="title" id="title" required="true">
-            <textarea name="description" style="resize:none;" rows="30" ></textarea>
-            <input type="submit" value="글쓰기">
+            <input type="text" name="title" id="title" required="true" value=<%=post.title%>>
+            <textarea name="description" style="resize:none;" rows="30"><%=post.description%></textarea>
+            <input type="hidden" name="postId" value=<%=post.id%>>
+            <input type="hidden" name="userNick" value=<%=user.nick%>>
+            <input type="submit" value="수정완료">
         </form>
     </div>
 </body>

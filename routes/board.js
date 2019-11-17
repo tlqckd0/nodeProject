@@ -52,11 +52,54 @@ router.get('/view/:boardNum/:id',async(req,res,next)=>{
         next(error);
     }
 })
+//글 수정하기
+router.post('/:boardNum/updateForm', isLoggedIn, async (req, res, next) => {
+    //포스트정보
+    const { boardNum } = req.params;
+    const { userNick, postId } = req.body;
+    console.log(userNick+","+postId);
+    try {
+        if(userNick === req.user.nick) {
+            const post = await Post.findOne({ where: { id: postId } });
+            res.render('updateForm', {
+                user: req.user,
+                num: boardNum,
+                post
+            })
+        }
+        else {
+            console.log("수정: 사용자가 일치하지 않습니다.");
+            res.redirect(`/board/${boardNum}`);
+        }
+    } catch(error){
+        console.error(error);
+        next(error);
+    }
+})
+//글 수정 처리
+router.post('/:boardNum/update', isLoggedIn, async (req, res, next) => {
+    //포스트정보
+    const { boardNum } = req.params;
+    const { userNick, postId, title, description } = req.body;
+    try {
+        if (userNick === req.user.nick) {
+            await Post.update({ title, description }, { where: { id: postId } });
+            res.redirect(`/board/${boardNum}`);
+        }
+        else {
+            console.log("수정 : 사용자가 일치하지 않습니다.");
+            res.redirect(`/board/${boardNum}`);
+        }
+    } catch(error){
+        console.error(error);
+        next(error);
+    }
+})
+
 //글 삭제하기
 router.post('/:boardNum/delete/:id',isLoggedIn,async(req,res,next)=>{
     //포스트정보
     const {boardNum,id} = req.params;
-    //글쓴사람 ID
     const {userNick} = req.body;
     try{
         if(userNick === req.user.nick){
@@ -64,10 +107,10 @@ router.post('/:boardNum/delete/:id',isLoggedIn,async(req,res,next)=>{
             res.redirect(`/board/${boardNum}`);
         }
         else{
-            console.log("사용자 일치하지 않는다");
+            console.log("삭제 :사용자 일치하지 않는다");
             res.redirect(`/board/${boardNum}`);
         }
-    }catch{
+    }catch(error){
         console.error(error);
         next(error);
     }

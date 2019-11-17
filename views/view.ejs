@@ -7,6 +7,11 @@
     <link href="/css/layout.css" rel="stylesheet" type="text/css">
     <link href="/css/view.css" rel="stylesheet" type="text/css">
     <title><%=title%></title>
+    <style>
+        .postMgt{
+            display: inline;
+        }
+    </style>
 </head>
 <body>
     <!-- 레이아웃-->
@@ -22,9 +27,14 @@
         </div>
         <hr>
         <% if(user.nick === post.nick){%>
-            <form method="POST" action=<%="/board/"+num+"/delete/"+post.id%>>
+            <form class="postMgt" method="POST" action=<%="/board/"+num+"/delete/"+post.id%>>
                 <input type="hidden" name="userNick" value=<%=user.nick%>>
                 <input type="submit" value="삭제">
+            </form>
+            <form class="postMgt" method="POST" action=<%="/board/"+num+"/updateForm"%>>
+                <input type="hidden" name="userNick" value=<%=user.nick%>>
+                <input type="hidden" name="postId" value=<%=post.id%>>
+                <input type="submit" value="글 수정">
             </form>
         <%}%>
         
