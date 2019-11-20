@@ -1,5 +1,5 @@
 
-<div id="Layout">
+<div id="header">
     <hr>
     <h1><a href="/" id="mainlink">Main</a></h1>
     <hr>
@@ -16,8 +16,9 @@
     </div>
     <div id="userInfo">
         <%if(user != null){%>
-            <h1><%=user.nick%>님</h1>
-            <a href="/auth/logout">로그아웃</a>
+            <h1 style="margin: 10px;"><%=user.nick%>님</h1>
+            <a class="userChoice" href="/auth/logout">로그아웃</a>
+            <a class="userChoice" href="#">작성글 보기</a>
         <%}else{%>
             <form id="loginForm" action="/auth/login" method="POST">
                 <table>

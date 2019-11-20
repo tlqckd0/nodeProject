@@ -3,3 +3,10 @@
     margin: auto;
     border: 1px solid grey;
 }
+.postMgt{
+    display: inline;
+}
+.postIMG{
+    width: 700px;
+    padding: 50px;
+}

@@ -9,23 +9,45 @@
     <style>
         textarea{
             margin-top: 10px;
-            width: 631px;
+            width: 800px;
         }
         #title{
-            width: 600px;
+            width: 750px;
         }
     </style>
 </head>
 <body>
-    <% include ./layout %>
+    <% include ./header %>
     <div id="write">
-        <form id="post" method="post" action=<%="/board/"+num+"/writeform" %>>
-            <!--일단 이건 가로 80프로-->
+        <form id="post" method="post" action=<%="/board/"+boardNum+"/writeform" %>>
             <span id="postTitle">title   </span>
             <input type="text" name="title" id="title" required="true">
-            <textarea name="description" style="resize:none;" rows="30" ></textarea>
-            <input type="submit" value="글쓰기">
+            <textarea name="description" style="resize:none; display: block;" rows="30" ></textarea>
+            <hr>
+            <input type="file" id="fileSelector" >
+            <hr>
+            <input type="submit" value="POST" >
+            <input type="hidden" name="imageURL" id="imageURL">
         </form>
     </div>
+    <% include ./footer %>
 </body>
 </html>
+<script>
+    document.getElementById('fileSelector').addEventListener('change',()=>{
+        var formData = new FormData();
+        var file = document.getElementById('fileSelector')
+        formData.append('imgURL',file.files[0]);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = ()=>{
+            if(xhr.status === 200){
+                var URL = JSON.parse(xhr.responseText).url;
+                document.getElementById('imageURL').value = URL;
+            }else{
+                console.error(xhr.responseText);
+            }
+        }
+        xhr.open('POST','/fileManage/img');
+        xhr.send(formData);
+    })
+</script>

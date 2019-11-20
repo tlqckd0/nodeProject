@@ -1,27 +1,29 @@
-#Layout, #main, #index, #board, #error ,#write, #join{
+#header, #main, #index, #board, #error ,#write, #join,#footer,#post-list{
     width: 800px;
     margin: auto;
 }
+#hostInfo{
+    color: white;
+    padding: 20px;
+    background: rgb(109,109,109);
+}
 .join{
-    margin: 10px;
+    margin: 5px;
     border: black solid 1px;
-    background-color: powderblue;
-    padding: 5px;
-    border-radius: 3px;
+    padding: 3px;
 }
 table{
     display: inline;
 
 }
 #loginForm{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 #loginSubmit{
     all:unset;
     border: 1px grey solid;
     height: 50px;
     width: 50px;
-    border-radius: 3px;
 }
 a, a:hover, a:visited, a:active{
     text-decoration: none;
@@ -35,7 +37,7 @@ a, a:hover, a:visited, a:active{
     font: 67.5% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
     font-size:14px;
     font-weight:bold;
-    width: 500px;
+    width: 800px;
     display: inline-block;
     }
     
@@ -121,10 +123,11 @@ a, a:hover, a:visited, a:active{
     }
 
 #userInfo{
-    width: 400px;
+    width: 750px;
     height: 100px;
-    border-radius: 30px;
     border: grey 1px solid;
-    background-color: rgb(218, 216, 216);
-    padding: 50px;
+    padding-left: 50px;
+}
+.userChoice{
+    border: black 1px solid;
 }

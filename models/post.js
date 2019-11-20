@@ -4,6 +4,10 @@ module.exports = (sequeluze, DataTypes) =>{
             type:DataTypes.STRING(40),
             allowNull:false,
         },
+        imageURL:{
+            type:DataTypes.STRING(100),
+            allowNull:true
+        },
         description:{
             type:DataTypes.STRING(1000),
             allowNull:false,

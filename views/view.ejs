@@ -7,31 +7,28 @@
     <link href="/css/layout.css" rel="stylesheet" type="text/css">
     <link href="/css/view.css" rel="stylesheet" type="text/css">
     <title><%=title%></title>
-    <style>
-        .postMgt{
-            display: inline;
-        }
-    </style>
+
 </head>
 <body>
     <!-- 레이아웃-->
-    <% include ./layout %>
+    <% include ./header %>
     <!-- 게시글 읽기!-->
     <div id="post-Wrap">
         <h3><span><%=post.title%></span></h3>
         <hr>
+        <img class="postIMG" src="<%=post.imageURL%>">
         <div id="discription">
             <p>
                 <%=post.description%>
             </p>
         </div>
         <hr>
-        <% if(user.nick === post.nick){%>
-            <form class="postMgt" method="POST" action=<%="/board/"+num+"/delete/"+post.id%>>
+        <% if(user && (user.nick === post.nick)){%>
+            <form class="postMgt" method="POST" action=<%="/board/"+boardNum+"/delete/"+post.id%>>
                 <input type="hidden" name="userNick" value=<%=user.nick%>>
                 <input type="submit" value="삭제">
             </form>
-            <form class="postMgt" method="POST" action=<%="/board/"+num+"/updateForm"%>>
+            <form class="postMgt" method="POST" action=<%="/board/"+boardNum+"/updateForm"%>>
                 <input type="hidden" name="userNick" value=<%=user.nick%>>
                 <input type="hidden" name="postId" value=<%=post.id%>>
                 <input type="submit" value="글 수정">
@@ -41,5 +38,6 @@
     </div>
     <!-- 게시글 리스트-->
     <% include ./boardLayout %>
+    <% include ./footer %>
 </body>
 </html>

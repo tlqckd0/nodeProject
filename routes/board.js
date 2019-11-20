@@ -2,6 +2,7 @@ const express = require('express');
 const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
 const router = express.Router();
 const {Post} = require('../models');
+const multer = require('multer');
 
 //게시판 메인
 router.get('/',(req,res,next)=>{
@@ -10,31 +11,80 @@ router.get('/',(req,res,next)=>{
 
 //게시판 번호 1,2
 router.get('/:boardNum',async (req,res,next)=>{
-    const boardNum = req.params.boardNum;
+    
+    let {page} = req.query;
+    const {boardNum} = req.params;
     if(boardNum != 1 && boardNum != 2){
         return res.redirect('/board');
     }
+    console.log("query:",page)
     try{
-        const posts = await Post.findAll({where:{boardName:boardNum}});
+        const getAllposts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+        if(page === undefined || page === 1){
+            var posts = await Post.findAll({where:{boardName:boardNum},limit:10,order:[['createdAt','DESC']]});
+        }
+        else{
+            page = (page-1)*10;
+            var posts = await Post.findAll({where:{boardName:boardNum},offset:page,limit:10,order:[['createdAt','DESC']]});
+        }
+        const pageLength = Math.ceil(getAllposts.length/10);
+        
         const postdata=[];
         posts.forEach(post => {
             postdata.push(post.dataValues);
         });
-        res.render('board',{num:boardNum,user:req.user,postdata});
+        res.render('board',{boardNum,user:req.user,postdata,pageLength});
 
     }catch(error){
         console.error(error);
         next(error);
     }
 })
+//글쓰기
+router.get('/:boardNum/writeform',isLoggedIn,(req,res,next)=>{
+    const boardNum = req.params.boardNum;
+    res.render('writeForm',{boardNum,user:req.user})
+})
+
+//글쓴거 처리
+router.post('/:boardNum/writeform',isLoggedIn,async (req,res,next)=>{
+    const {title, description,imageURL} = req.body;
+    const boardName = req.params.boardNum;
+    const nick = req.user.nick;
+    try{
+        const post = await Post.create({
+            title,
+            imageURL,
+            description,
+            nick,
+            boardName,
+            type:'normal'
+        })
+        return res.redirect(`/board/view/${boardName}/${post.id}`);
+    }
+    catch(error){
+        console.error(error);
+        next(error);
+    }
+})
 //글쓴거 보여주기
-router.get('/view/:boardNum/:id',async(req,res,next)=>{
+router.get('/view/:boardNum/:id?',async(req,res,next)=>{
+    let {page} = req.query;
     const {boardNum,id} = req.params;
     try{
         //원하는거
         const post = await Post.findOne({where:{boardName:boardNum,id}});
         //밑에 리스트 출력
-        const posts = await Post.findAll({where:{boardName:boardNum}});
+        const getAllposts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+        if(page === undefined || page === 1){
+            var posts = await Post.findAll({where:{boardName:boardNum},limit:10,order:[['createdAt','DESC']]});
+        }
+        else{
+            page = (page-1)*10;
+            var posts = await Post.findAll({where:{boardName:boardNum},offset:page,limit:10,order:[['createdAt','DESC']]});
+        }
+        const pageLength = Math.ceil(getAllposts.length/10);
+
         const postdata=[];
         posts.forEach(post => {
             postdata.push(post.dataValues);
@@ -43,9 +93,10 @@ router.get('/view/:boardNum/:id',async(req,res,next)=>{
         res.render('view',{
             post,
             title:post.title,
-            num:boardNum,
+            boardNum,
             user:req.user,
-            postdata
+            postdata,
+            pageLength
         });
     }catch(error){
         console.error(error);
@@ -63,7 +114,7 @@ router.post('/:boardNum/updateForm', isLoggedIn, async (req, res, next) => {
             const post = await Post.findOne({ where: { id: postId } });
             res.render('updateForm', {
                 user: req.user,
-                num: boardNum,
+                boardNum,
                 post
             })
         }
@@ -116,32 +167,6 @@ router.post('/:boardNum/delete/:id',isLoggedIn,async(req,res,next)=>{
     }
 });
 
-//글쓰기
-router.get('/:boardNum/writeform',isLoggedIn,(req,res,next)=>{
-    const boardNum = req.params.boardNum;
-    res.render('writeForm',{num:boardNum,user:req.user})
-})
-
-//글쓴거 처리
-router.post('/:boardNum/writeform',isLoggedIn,async (req,res,next)=>{
-    const {title, description} = req.body;
-    const boardName = req.params.boardNum;
-    const nick = req.user.nick;
-    try{
-        const post = await Post.create({
-            title,
-            description,
-            nick,
-            boardName,
-            type:'normal'
-        })
-        return res.redirect(`/board/${boardName}`);
-    }
-    catch(error){
-        console.error(error);
-        next(error);
-    }
-})
 
 
 module.exports = router

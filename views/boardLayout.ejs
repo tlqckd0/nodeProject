@@ -1,7 +1,7 @@
 <div id=board>
-    <span>this is Board page </span>
-    <button class="write">글쓰기</button>
-    <% postdata %>
+    <%if(user != null){%>
+        <a style="border: 1px solid grey;" class="writebutton" href="<%="/board/"+boardNum+"/writeform"%>">글쓰기</a>
+    <%}%>
     <% length=postdata.length%>
     <div>
         <table id="post-list" border="1">
@@ -13,10 +13,10 @@
                 <th>time</th>
                 <th>recommend</th>
             </tr>
-            <% postdata.reverse().forEach(function(post){%>
+            <% postdata.forEach(function(post){%>
                     <tr>
                         <td><%=length %></td>
-                        <td><a href=<%="/board/view/"+num+'/'+post.id %>><%= post.title %></a></td>
+                        <td><a href="<%="/board/view/"+boardNum+'/'+post.id %>"><%= post.title %></a></td>
                         <td><%=post.nick %></td>
                         <td><%=post.type  %></td>
                         <td><%=post.createdAt.toString().substring(15,25);  %></td>
@@ -26,11 +26,27 @@
         <%})%>
         </table>
     </div>
+    <div style="text-align: center;" id="pageSelector">
+        <a href="?page=1" id="goFront"><<</a>
+        <span id="pagelist"></span>
+        <a  href="?page=<%=pageLength%>"  id="goBack">>></a>
+    </div>
 </div>
 <script>
-    document.querySelector('.write').addEventListener('click',()=>{
-        const link = location.href+'/writeform';
-        location.replace(link);
-    });
-
+    var url = getUrlParams();
+    console.log(url)
+    //url 분석 함수 긁어옴
+    function getUrlParams() {
+        var params = {};
+        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { params[key] = value; });
+        return params;
+    }
+    var pagelist = document.getElementById('pagelist')
+    var pageLength = "<%=pageLength%>";
+    for(let i = 1;i<=pageLength;i++){
+        var a = document.createElement('a');
+        a.href = `?page=${i}`
+        a.textContent = ' '+i+' ';
+        pagelist.appendChild(a);
+    } 
 </script>
