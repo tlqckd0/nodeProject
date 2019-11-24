@@ -11,28 +11,36 @@ router.get('/',(req,res,next)=>{
 
 //게시판 번호 1,2
 router.get('/:boardNum',async (req,res,next)=>{
-    
-    let {page} = req.query;
+    let showPrintNum = 10;
+    let {page} =req.query;
     const {boardNum} = req.params;
     if(boardNum != 1 && boardNum != 2){
         return res.redirect('/board');
     }
     console.log("query:",page)
     try{
-        const getAllposts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+        const posts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+
+        //보내주는거는 ex) page = 1또는 없으면 최근쓴글 0~9번까지
+        //                page = 3이면 최근쓴글  20~29번까지
+        const pageLength = Math.ceil(posts.length/10);
+        if(pageLength === parseInt(page)){
+            showPrintNum = posts.length-(page-1)*10;
+        }else if(pageLength === Number(1)){
+            //게시판에 글 10개 이하일때
+            showPrintNum = posts.length;
+        }
         if(page === undefined || page === 1){
-            var posts = await Post.findAll({where:{boardName:boardNum},limit:10,order:[['createdAt','DESC']]});
-        }
-        else{
+            page = 0
+        }else{
             page = (page-1)*10;
-            var posts = await Post.findAll({where:{boardName:boardNum},offset:page,limit:10,order:[['createdAt','DESC']]});
         }
-        const pageLength = Math.ceil(getAllposts.length/10);
-        
+
         const postdata=[];
-        posts.forEach(post => {
-            postdata.push(post.dataValues);
-        });
+        for(let i = page;i<page+showPrintNum;i++){
+            postdata.push(posts[i]);
+        }
+
         res.render('board',{boardNum,user:req.user,postdata,pageLength});
 
     }catch(error){
@@ -69,26 +77,33 @@ router.post('/:boardNum/writeform',isLoggedIn,async (req,res,next)=>{
 })
 //글쓴거 보여주기
 router.get('/view/:boardNum/:id?',async(req,res,next)=>{
+    let showPrintNum = 10;
     let {page} = req.query;
     const {boardNum,id} = req.params;
     try{
         //원하는거
         const post = await Post.findOne({where:{boardName:boardNum,id}});
-        //밑에 리스트 출력
-        const getAllposts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+        const posts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
+        //보내주는거는 ex) page = 1또는 없으면 최근쓴글 0~9번까지
+        //                page = 3이면 최근쓴글  20~29번까지
+        const numOfPost = posts.length;
+        const pageLength = Math.ceil(posts.length/10);
+        if(pageLength === parseInt(page)){
+            showPrintNum = posts.length-(page-1)*10;
+        }else if(pageLength === Number(1)){
+            //게시판에 글 10개 이하일때
+            showPrintNum = posts.length;
+        }
         if(page === undefined || page === 1){
-            var posts = await Post.findAll({where:{boardName:boardNum},limit:10,order:[['createdAt','DESC']]});
-        }
-        else{
+            page = 0
+        }else{
             page = (page-1)*10;
-            var posts = await Post.findAll({where:{boardName:boardNum},offset:page,limit:10,order:[['createdAt','DESC']]});
         }
-        const pageLength = Math.ceil(getAllposts.length/10);
 
         const postdata=[];
-        posts.forEach(post => {
-            postdata.push(post.dataValues);
-        });
+        for(let i = page;i<page+showPrintNum;i++){
+            postdata.push(posts[i]);
+        }
 
         res.render('view',{
             post,

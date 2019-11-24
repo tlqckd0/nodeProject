@@ -4,7 +4,7 @@
     <%}%>
     <% length=postdata.length%>
     <div>
-        <table id="post-list" border="1">
+        <table id="post-table" border="1">
             <tr>
                 <th>no.</th>
                 <th>title</th>
@@ -14,7 +14,7 @@
                 <th>recommend</th>
             </tr>
             <% postdata.forEach(function(post){%>
-                    <tr>
+                    <tr id="post-list">
                         <td><%=length %></td>
                         <td><a href="<%="/board/view/"+boardNum+'/'+post.id %>"><%= post.title %></a></td>
                         <td><%=post.nick %></td>
@@ -23,19 +23,19 @@
                         <td><%=post.recommend %></td>
                     </tr>
             <%length--; %>
-        <%})%>
+            <%})%>
         </table>
     </div>
     <div style="text-align: center;" id="pageSelector">
         <a href="?page=1" id="goFront"><<</a>
         <span id="pagelist"></span>
-        <a  href="?page=<%=pageLength%>"  id="goBack">>></a>
+        <a href="?page=<%=pageLength%>" id="goBack">>></a>
     </div>
 </div>
 <script>
     var url = getUrlParams();
     console.log(url)
-    //url 분석 함수 긁어옴
+    //url 분석
     function getUrlParams() {
         var params = {};
         window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { params[key] = value; });

@@ -1,4 +1,4 @@
-#header, #main, #index, #board, #error ,#write, #join,#footer,#post-list{
+#header, #main, #index, #board, #error ,#write, #join,#footer,#post-table{
     width: 800px;
     margin: auto;
 }
