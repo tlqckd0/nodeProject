@@ -1,7 +1,7 @@
 const express = require('express');
 const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
 const router = express.Router();
-const {Post} = require('../models');
+const {Post , Comment} = require('../models');
 const multer = require('multer');
 
 //게시판 메인
@@ -17,10 +17,8 @@ router.get('/:boardNum',async (req,res,next)=>{
     if(boardNum != 1 && boardNum != 2){
         return res.redirect('/board');
     }
-    console.log("query:",page)
     try{
         const posts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
-
         //보내주는거는 ex) page = 1또는 없으면 최근쓴글 0~9번까지
         //                page = 3이면 최근쓴글  20~29번까지
         const pageLength = Math.ceil(posts.length/10);
@@ -81,17 +79,13 @@ router.get('/view/:boardNum/:id?',async(req,res,next)=>{
     let {page} = req.query;
     const {boardNum,id} = req.params;
     try{
-        //원하는거
-        const post = await Post.findOne({where:{boardName:boardNum,id}});
+        //포스트 처리
+        const post = await Post.findOne({where:{boardName:boardNum,id},include:{model:Comment}});
         const posts = await Post.findAll({where:{boardName:boardNum},order:[['createdAt','DESC']]});
-        //보내주는거는 ex) page = 1또는 없으면 최근쓴글 0~9번까지
-        //                page = 3이면 최근쓴글  20~29번까지
-        const numOfPost = posts.length;
         const pageLength = Math.ceil(posts.length/10);
         if(pageLength === parseInt(page)){
             showPrintNum = posts.length-(page-1)*10;
         }else if(pageLength === Number(1)){
-            //게시판에 글 10개 이하일때
             showPrintNum = posts.length;
         }
         if(page === undefined || page === 1){
@@ -99,19 +93,19 @@ router.get('/view/:boardNum/:id?',async(req,res,next)=>{
         }else{
             page = (page-1)*10;
         }
-
         const postdata=[];
         for(let i = page;i<page+showPrintNum;i++){
             postdata.push(posts[i]);
         }
-
+        
         res.render('view',{
             post,
             title:post.title,
             boardNum,
             user:req.user,
             postdata,
-            pageLength
+            pageLength,
+            comments:post.comments
         });
     }catch(error){
         console.error(error);
@@ -123,7 +117,6 @@ router.post('/:boardNum/updateForm', isLoggedIn, async (req, res, next) => {
     //포스트정보
     const { boardNum } = req.params;
     const { userNick, postId } = req.body;
-    console.log(userNick+","+postId);
     try {
         if(userNick === req.user.nick) {
             const post = await Post.findOne({ where: { id: postId } });

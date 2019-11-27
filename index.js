@@ -10,6 +10,7 @@ const router = require('./routes/index');
 const auth = require('./routes/auth');
 const board = require('./routes/board');
 const fileManage = require('./routes/fileManage');
+const comment = require('./routes/comment');
 
 const {sequelize} = require('./models');
 const passportConfig = require('./passport');
@@ -48,6 +49,7 @@ app.use('/',router);
 app.use('/auth',auth);
 app.use('/board',board);
 app.use('/fileManage',fileManage);
+app.use('/comment',comment);
 
 app.use((req,res,next)=>{
     const err=  new Error('Not Found');

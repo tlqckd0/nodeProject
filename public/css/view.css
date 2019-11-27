@@ -10,3 +10,15 @@
     width: 700px;
     padding: 50px;
 }
+#commentList{
+    margin: 5px;
+    padding: 5px;
+}
+#commentList >li{
+    list-style: none;
+}
+#commentInfo{
+    padding: 10px;
+    text-align: left;
+    font-size: 0.8em;
+}

@@ -1,8 +1,9 @@
 <div id=board>
     <%if(user != null){%>
-        <a style="border: 1px solid grey;" class="writebutton" href="<%="/board/"+boardNum+"/writeform"%>">글쓰기</a>
+    <a style="border: 1px solid grey;" class="writebutton" href="<%="/board/"+boardNum+"/writeform"%>">글쓰기</a>
     <%}%>
     <% length=postdata.length%>
+    <% if(pageLength !== 0){%>
     <div>
         <table id="post-table" border="1">
             <tr>
@@ -14,33 +15,28 @@
                 <th>recommend</th>
             </tr>
             <% postdata.forEach(function(post){%>
-                    <tr id="post-list">
-                        <td><%=length %></td>
-                        <td><a href="<%="/board/view/"+boardNum+'/'+post.id %>"><%= post.title %></a></td>
-                        <td><%=post.nick %></td>
-                        <td><%=post.type  %></td>
-                        <td><%=post.createdAt.toString().substring(15,25);  %></td>
-                        <td><%=post.recommend %></td>
-                    </tr>
+            <tr id="post-list">
+                <td><%=post.id %></td>
+                <td><a href="<%="/board/view/"+boardNum+'/'+post.id %>"><%= post.title %></a></td>
+                <td><%=post.nick %></td>
+                <td><%=post.type  %></td>
+                <td><%=post.createdAt.toString().substring(15,25);  %></td>
+                <td><%=post.recommend %></td>
+            </tr>
             <%length--; %>
             <%})%>
         </table>
     </div>
     <div style="text-align: center;" id="pageSelector">
-        <a href="?page=1" id="goFront"><<</a>
-        <span id="pagelist"></span>
-        <a href="?page=<%=pageLength%>" id="goBack">>></a>
+        <a href="?page=1" id="goFront">
+            <<</a> <span id="pagelist"></span>
+                <a href="?page=<%=pageLength%>" id="goBack">>></a>
     </div>
+    <%}else{%>
+        <span>첫번째 글을 작성해주세요 </span>
+    <%}%>
 </div>
 <script>
-    var url = getUrlParams();
-    console.log(url)
-    //url 분석
-    function getUrlParams() {
-        var params = {};
-        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) { params[key] = value; });
-        return params;
-    }
     var pagelist = document.getElementById('pagelist')
     var pageLength = "<%=pageLength%>";
     for(let i = 1;i<=pageLength;i++){
