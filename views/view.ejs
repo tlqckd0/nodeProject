@@ -23,8 +23,9 @@
             </p>
         </div>
         <div class="recommend-area">
-            <button id="recommendBtn">추천하기 </button><label>추천 수 : <%=post.recommend%></label>
+            <button id="recommendBtn">추천하기 </button>추천 수 : <label id="numOfRecommend"><%=post.recommend%></label>
         </div>
+
         <hr>
         <% if(user && (user.nick === post.nick)){%>
             <form class="postMgt" method="POST" action=<%="/board/"+boardNum+"/delete/"+post.id%>>
@@ -46,7 +47,24 @@
 </body>
 </html>
 <script>
-     document.getElementById('recommendBtn').addEventListener('click',()=>{
-         alert('추천하셨습니다.');
-     })
+    document.getElementById('recommendBtn').addEventListener('click', () => {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+            if(xhr.status === 200){
+                const {num,result} = JSON.parse(xhr.responseText);
+                if(result === 'ok'){
+                    document.getElementById('numOfRecommend').textContent = num;
+                    alert('추천하셨습니다.');
+                }else if(result === 'false'){
+                    alert('이미 추천했습니다.');
+                }
+            }else{
+                console.log(xhr.responseText);
+                alert('로그인해주세요.');
+            }
+        }
+        xhr.open('POST','/recommend');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({'id': "<%=post.id%>"}));
+    })
 </script>
