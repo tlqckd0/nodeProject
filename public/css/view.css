@@ -22,3 +22,14 @@
     text-align: left;
     font-size: 0.8em;
 }
+.recommend-area{
+    text-align: center;
+}
+#recommendBtn{
+    all:unset;
+    border: 1px grey solid;
+    width:80px;
+    height: 20px;
+    border-radius: 3px;
+    margin: 10px;
+}

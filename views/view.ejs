@@ -22,6 +22,9 @@
                 <%=post.description%>
             </p>
         </div>
+        <div class="recommend-area">
+            <button id="recommendBtn">추천하기 </button><label>추천 수 : <%=post.recommend%></label>
+        </div>
         <hr>
         <% if(user && (user.nick === post.nick)){%>
             <form class="postMgt" method="POST" action=<%="/board/"+boardNum+"/delete/"+post.id%>>
@@ -42,3 +45,8 @@
     <% include ./footer %>
 </body>
 </html>
+<script>
+     document.getElementById('recommendBtn').addEventListener('click',()=>{
+         alert('추천하셨습니다.');
+     })
+</script>
