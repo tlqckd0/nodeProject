@@ -10,7 +10,14 @@
                 <th>no.</th>
                 <th>title</th>
                 <th>nick</th>
-                <th>type</th>
+                <th>
+                    <select id="select-type">
+                        <option value="all">타입선택</option>
+                        <option value="all">all</option>
+                        <option value="normal">normal</option>
+                        <option value="special">special</option>
+                    </select>
+                </th>
                 <th>time</th>
                 <th>recommend</th>
             </tr>
@@ -37,12 +44,19 @@
     <%}%>
 </div>
 <script>
-    var pagelist = document.getElementById('pagelist')
-    var pageLength = "<%=pageLength%>";
+    const pagelist = document.getElementById('pagelist')
+    const pageLength = "<%=pageLength%>";
+    let selectType =  document.getElementById("select-type")
+
     for(let i = 1;i<=pageLength;i++){
         var a = document.createElement('a');
-        a.href = `?page=${i}`
+        a.href = location.pathname + `?page=${i}`;
         a.textContent = ' '+i+' ';
         pagelist.appendChild(a);
     } 
+    selectType.addEventListener('change',()=>{
+        var type = selectType.options[selectType.selectedIndex].value;
+        location.replace(`?type=${type}`);
+    })
+
 </script>

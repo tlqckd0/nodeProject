@@ -3,24 +3,24 @@
     <div>
         <span>댓글[<%=comments.length%>]</span>
         <hr>
-        <% if(comments.length !== 0){%>
-            <ol id="commentList">
-                <%comments.forEach(function(comment){%>
-                    <li>
-                        <div class="commentInfo"><%=comment.nick%> - <%=comment.createdAt.toString().substring(15,25)%></div>
-                        <div class="comment"><%=comment.description%></div>
-                        <hr>
-                    </li>
-                <%})%>
+    
+        <ol id="commentList">
+            <% if(comments.length !== 0){%>
+            <%comments.forEach(function(comment){%>
+            <li>
+                <div class="commentInfo"><%=comment.nick%> - <%=comment.createdAt.toString().substring(15,25)%></div>
+                <div class="comment"><%=comment.description%></div>
+                <hr>
+            </li>
+            <%})%>
+            <%}else{%>
+             <span id="no-comment">첫번째 댓글을 달아주세요!</span>
+            <%}%>
             </ol>
-        <%}else{%>
-            <span>첫번째 댓글을 달아주세요!</span>
-        <%}%>
-
     </div>
     <%if(user != null){%>
     <div>
-        <textarea id="commentBody" rows=5 style=" width: 775px; resize: none; margin: 10px;"></textarea>
+        <textarea id="commentBody" rows='5' style=" width: 775px; resize: none; margin: 10px;"></textarea>
         <div style="text-align: right;">
             <button style="margin: 5px; border: 1px grey solid;" id="commentButton">댓글달기</button>
         </div>
@@ -31,34 +31,42 @@
 </div>
 <script>
     //load comment and add comment
-    document.getElementById('commentButton').addEventListener('click',() => {
-        const description = document.getElementById('commentBody').value;
-        description.value ="";
-        var xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                var comment = JSON.parse(xhr.responseText);
-                document.getElementById('commentBody').value = "";
-                var list = document.getElementById('commentList');
-                var li = document.createElement('li');
-                var div = document.createElement('div');
-                var hr = document.createElement('hr')
-                div.setAttribute('class','commentInfo');
-                div.textContent = `${comment.nick} - NEW!`;
-                li.appendChild(div);
-                div =document.createElement('div');
-                div.setAttribute('class','comment');
-                div.textContent = `${comment.description}`
-                li.appendChild(div);
-                li.appendChild(hr);
-                list.appendChild(li);
-            } else {
-                console.error(xhr.responseText);
+    var commentButton = document.getElementById('commentButton')
+    if (commentButton) {
+        commentButton.addEventListener('click', () => {
+            const description = document.getElementById('commentBody').value;
+            description.value = "";
+            var xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    //처음댓글달때
+                    if ("<%=comments.length%>" === '0') {
+                        var noComment = document.getElementById('no-comment');
+                        noComment.textContent = "";
+                    }
+                    var comment = JSON.parse(xhr.responseText);
+                    document.getElementById('commentBody').value = "";
+                    var list = document.getElementById('commentList');
+                    var li = document.createElement('li');
+                    var div = document.createElement('div');
+                    var hr = document.createElement('hr')
+                    div.setAttribute('class', 'commentInfo');
+                    div.textContent = `${comment.nick} - NEW!`;
+                    li.appendChild(div);
+                    div = document.createElement('div');
+                    div.setAttribute('class', 'comment');
+                    div.textContent = `${comment.description}`
+                    li.appendChild(div);
+                    li.appendChild(hr);
+                    list.appendChild(li);
+
+                } else {
+                    console.error(xhr.responseText);
+                }
             }
-        }
-        xhr.open('POST', '/comment/add');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({ description, postId: "<%=post.id%>" }));
-    })
-    
+            xhr.open('POST', '/comment/add');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ description, postId: "<%=post.id%>" }));
+        })
+    }
 </script>

@@ -22,6 +22,11 @@
         <form id="post" method="post" action=<%="/board/"+boardNum+"/writeform" %>>
             <span id="postTitle">title   </span>
             <input type="text" name="title" id="title" required="true">
+            <label for="select-type">Post type is..</label>
+            <select name="type" id="select-type">
+                <option value="normal">normal</option>
+                <option value="special">special</option>
+            </select>
             <textarea name="description" style="resize:none; display: block;" rows="30" ></textarea>
             <hr>
             <input type="file" id="fileSelector" >
