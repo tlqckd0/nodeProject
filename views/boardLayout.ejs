@@ -24,7 +24,7 @@
             <% postdata.forEach(function(post){%>
             <tr id="post-list">
                 <td><%=post.id %></td>
-                <td><a href="<%="/board/view/"+boardNum+'/'+post.id %>"><%= post.title %></a></td>
+                <td><a href="<%="/board/view/"+boardNum+'/'+post.id%>?type=<%=type%>    "><%= post.title %></a></td>
                 <td><%=post.nick %></td>
                 <td><%=post.type  %></td>
                 <td><%=post.createdAt.toString().substring(15,25);  %></td>
@@ -35,25 +35,29 @@
         </table>
     </div>
     <div style="text-align: center;" id="pageSelector">
-        <a href="?page=1" id="goFront">
-            <<</a> <span id="pagelist"></span>
-                <a href="?page=<%=pageLength%>" id="goBack">>></a>
+        <a href="?type=<%=type%>&page=1" id="goFront"><<</a> 
+        <span id="pagelist">
+            <%for(let i = 1;i <= pageLength ; i++){%>
+                | <a class="selectPage"><%=i%></a>
+            <%}%>
+        </span>
+        <a href="?type=<%=type%>&page=<%=pageLength%>" id="goBack">|>></a>
     </div>
     <%}else{%>
         <span>첫번째 글을 작성해주세요 </span>
     <%}%>
 </div>
 <script>
-    const pagelist = document.getElementById('pagelist')
-    const pageLength = "<%=pageLength%>";
+    const oriURL = location.pathname;
+    let selectPage = document.querySelectorAll('.selectPage');
+    let query = [];
     let selectType =  document.getElementById("select-type")
-
-    for(let i = 1;i<=pageLength;i++){
-        var a = document.createElement('a');
-        a.href = location.pathname + `?page=${i}`;
-        a.textContent = ' '+i+' ';
-        pagelist.appendChild(a);
-    } 
+    console.log(selectPage);
+    console.log("<%=type%>");
+    selectPage.forEach(element => {
+        let url = oriURL+`?type=<%=type%>&page=${element.textContent}`;
+        element.setAttribute('href',url);
+    });
     selectType.addEventListener('change',()=>{
         var type = selectType.options[selectType.selectedIndex].value;
         location.replace(`?type=${type}`);

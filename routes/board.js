@@ -23,9 +23,7 @@ router.get('/:boardNum',async (req,res,next)=>{
         //포스트리스트 처리
         const PostCondition = {boardName:boardNum};
         if(type !== undefined){
-            if(type !== 'all'){
-                PostCondition.type = type;
-            }
+            PostCondition.type = type;
         }
         const numOfPosts = await Post.count({where:PostCondition});
         if(page === undefined){
@@ -93,9 +91,7 @@ router.get('/view/:boardNum/:id?',async(req,res,next)=>{
         //포스트 리스트 처리
         const PostCondition = {boardName:boardNum};
         if(type !== undefined){
-            if(type !== 'all'){
-                PostCondition.type = type;
-            }
+            PostCondition.type = type;
         }
         const numOfPosts = await Post.count({where:PostCondition});
         if(page === undefined){
