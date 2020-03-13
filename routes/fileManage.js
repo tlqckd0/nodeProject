@@ -4,8 +4,6 @@ const path  = require('path');
 const multer = require('multer');
 
 const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
-const {Post} = require('../models');
-
 const router = express.Router();
 //되나..?
 fs.readdir('postFile/img',(error)=>{

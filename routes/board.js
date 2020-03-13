@@ -1,183 +1,158 @@
 const express = require('express');
-const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
-const {Post , Comment} = require('../models');
-const multer = require('multer');
 
-//게시판 메인
-router.get('/',(req,res,next)=>{
-    res.render('main',{user:req.user})
+//controller
+const {
+    Posting,
+    GetPostList,
+    GetPost,
+    GetPostWithoutComment,
+    UpdatePost,
+    DeletePost
+} = require('./controller/postControll');
+
+/* 게시판 메인 > 아직 뭐넣을지 모르겠음 */
+router.get('/', (req, res, next) => {
+    res.render('main', {// >> 렌더링
+        user: req.user
+    })
+})
+
+/* 게시판 접근 */
+router.get('/:boardName',(req,res,next)=>{
+    const { boardName } = req.params;
+    if (boardName != 1 && boardName != 2) {
+        return res.redirect('/board');
+    }else{
+        next();
+    }
 })
 
 //게시판 번호 1,2
-router.get('/:boardNum',async (req,res,next)=>{
-    let showPageNum = 10;
-    let {page, type} =req.query;
-    const {boardNum} = req.params;
-
-    //잘못된 보드 접근
-    if(boardNum != 1 && boardNum != 2){
-        return res.redirect('/board');
-    }
-    try{
-        //포스트리스트 처리
-        const PostCondition = {boardName:boardNum};
-        if(type !== undefined){
-            PostCondition.type = type;
-        }
-        const numOfPosts = await Post.count({where:PostCondition});
-        if(page === undefined){
-            page = 1;
-        }
-        if(numOfPosts <10){
-            showPageNum = numOfPosts;
-        }
-
-        const postdata = await Post.findAll({where:PostCondition,offset : showPageNum*(page-1),limit : showPageNum,order:[['createdAt','DESC']]});
-        const pageLength = Math.ceil(numOfPosts/10);
-
-        res.render('board',
-                {boardNum,
-                 user:req.user,
-                 postdata,
-                 pageLength,
-                 type});
-    }catch(error){
-        console.error(error);
-        next(error);
-    }
-})
-//글쓰기
-router.get('/:boardNum/writeform',isLoggedIn,(req,res,next)=>{
-    const boardNum = req.params.boardNum;
-    res.render('writeForm',{boardNum,user:req.user})
-})
-
-//글쓴거 처리
-router.post('/:boardNum/writeform',isLoggedIn,async (req,res,next)=>{
-    const {title, description,imageURL,type} = req.body;
-    const boardName = req.params.boardNum;
-    const nick = req.user.nick;
-    try{
-        const post = await Post.create({
-            title,
-            imageURL,
-            description,
-            nick,
-            boardName,
-            type
-        })
-        return res.redirect(`/board/view/${boardName}/${post.id}`);
-    }
-    catch(error){
-        console.error(error);
-        next(error);
-    }
-})
-//글쓴거 보여주기
-router.get('/view/:boardNum/:id?',async(req,res,next)=>{
-    let showPageNum = 10;
-    let {page,type} = req.query;
-    const {boardNum,id} = req.params;
-    
-    //잘못된 보드 접근
-    if(boardNum != 1 && boardNum != 2){
-        return res.redirect('/board');
-    }
-    try{
-        //포스트 처리
-        const post = await Post.findOne({where:{boardName:boardNum,id},include:{model:Comment}});
-
-        //포스트 리스트 처리
-        const PostCondition = {boardName:boardNum};
-        if(type !== undefined){
-            PostCondition.type = type;
-        }
-        const numOfPosts = await Post.count({where:PostCondition});
-        if(page === undefined){
-            page = 1;
-        }
-        if(numOfPosts <10){
-            showPageNum = numOfPosts;
-        }
-
-        const postdata = await Post.findAll({where:PostCondition,offset : showPageNum*(page-1),limit : showPageNum,order:[['createdAt','DESC']]});
-        const pageLength = Math.ceil(numOfPosts/10);
-
-        
-        res.render('view',{
-            post,
-            title:post.title,
-            comments:post.comments,
-            boardNum,
-            user:req.user,
-            postdata,
-            pageLength,
-            type
-        });
-    }catch(error){
-        console.error(error);
-        next(error);
-    }
-})
-//글 수정하기
-router.post('/:boardNum/updateForm', isLoggedIn, async (req, res, next) => {
-    //포스트정보
-    const { boardNum } = req.params;
-    const { userNick, postId } = req.body;
+router.get('/:boardName', async (req, res, next) => {
+    const { boardName } = req.params;
     try {
-        if(userNick === req.user.nick) {
-            const post = await Post.findOne({ where: { id: postId } });
+        const { page, type } = req.query;
+        const { pagesLength, posts, boardType } = await GetPostList(page, type, boardName);
+
+        res.render('board', {// >> 렌더링
+            boardName,
+            user: req.user,
+            posts,
+            pagesLength,
+            type: boardType
+        });
+
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+})
+
+/* 글쓰기 폼 */
+router.get('/:boardName/writeform', isLoggedIn, (req, res, next) => {
+    const { boardName } = req.params;
+
+    res.render('writeForm', {// >> 렌더링
+        boardName,
+        user: req.user
+    })
+})
+
+/* 글쓴거 처리하기 */
+router.post('/:boardName', isLoggedIn, async (req, res, next) => {
+    try {
+        const { id, boardName } = await Posting(req);
+        res.redirect(`/board/${boardName}/${id}?type=all`);
+    }
+    catch (error) {
+        console.error(error);
+        next(error);
+    }
+})
+
+/* 포스트 보기 */
+router.get('/:boardName/:id?', async (req, res, next) => {
+    const { boardName } = req.params;
+
+    try {
+        const { page, type } = req.query;
+        const { post, comments } = await GetPost(req)
+        const { pagesLength, posts, boardType } = await GetPostList(page, type, boardName);
+
+
+        res.render('view', {// >> 렌더링
+            post,
+            comments,
+            boardName,
+            user: req.user,
+            posts,
+            pagesLength,
+            type: boardType
+        });
+
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+/* 포스트 수정 */
+router.post('/:boardName/updateForm', isLoggedIn, async (req, res, next) => {
+    const { boardName } = req.params;
+
+    try {
+        if (req.body.nick === req.user.nick) {
+
+            const post = await GetPostWithoutComment(req);
+
             res.render('updateForm', {
                 user: req.user,
-                boardNum,
+                boardName,
                 post
             })
         }
         else {
             console.log("수정: 사용자가 일치하지 않습니다.");
-            res.redirect(`/board/${boardNum}`);
+            res.redirect(`/board/${boardName}`);
         }
-    } catch(error){
+    } catch (error) {
         console.error(error);
         next(error);
     }
-})
-//글 수정 처리
-router.post('/:boardNum/update', isLoggedIn, async (req, res, next) => {
-    //포스트정보
-    const { boardNum } = req.params;
-    const { userNick, postId, title, description } = req.body;
+});
+
+/* 글 수정처리 */
+router.post('/:boardName/update', isLoggedIn, async (req, res, next) => {
+    const { boardName } = req.params;
+
     try {
-        if (userNick === req.user.nick) {
-            await Post.update({ title, description }, { where: { id: postId } });
-            res.redirect(`/board/${boardNum}`);
+        if (req.body.nick === req.user.nick) {//사용자와 수정자가 일치하면
+            await UpdatePost(req);
+            res.redirect(`/board/${boardName}`);
         }
         else {
-            console.log("수정 : 사용자가 일치하지 않습니다.");
-            res.redirect(`/board/${boardNum}`);
+            res.redirect(`/board/${boardName}`);
         }
-    } catch(error){
+    } catch (error) {
         console.error(error);
         next(error);
     }
-})
+});
 
-//글 삭제하기
-router.post('/:boardNum/delete/:id',isLoggedIn,async(req,res,next)=>{
-    //포스트정보
-    const {boardNum,id} = req.params;
-    const {userNick} = req.body;
-    try{
-        if(userNick === req.user.nick){
-            await Post.destroy({where:{id,boardName:boardNum}});
-            res.redirect(`/board/${boardNum}`);
+/* 글 삭제하기 */
+router.post('/:boardName/delete/:id', isLoggedIn, async (req, res, next) => {
+    const { boardName } = req.params;
+    try {
+        if (req.body.nick === req.user.nick) {
+            await DeletePost(req);
+            res.redirect(`/board/${boardName}`);
         }
-        else{
-            console.log("삭제 :사용자 일치하지 않는다");
-            res.redirect(`/board/${boardNum}`);
+        else {
+            res.redirect(`/board/${boardName}`);
         }
-    }catch(error){
+    } catch (error) {
         console.error(error);
         next(error);
     }

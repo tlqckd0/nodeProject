@@ -19,7 +19,7 @@
 <body>
     <% include ./header %>
     <div id="write">
-        <form id="post" method="post" action=<%="/board/"+boardNum+"/writeform" %>>
+        <form id="post" method="post" action=<%="/board/"+boardName%>>
             <span id="postTitle">title   </span>
             <input type="text" name="title" id="title" required="true">
             <label for="select-type">Post type is..</label>

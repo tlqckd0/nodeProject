@@ -1,9 +1,12 @@
 <div id=board>
     <%if(user != null){%>
-    <a style="border: 1px solid grey;" class="writebutton" href="<%="/board/"+boardNum+"/writeform"%>">글쓰기</a>
+    <a style="border: 1px solid grey;" class="writebutton" href="<%="/board/"+boardName+"/writeform"%>">글쓰기</a>
     <%}%>
-    <% length=postdata.length%>
-    <% if(pageLength !== 0){%>
+    <% length=posts.length%>
+    
+    <!--포스트 리스트 출력-->
+
+    <% if(pagesLength !== 0){%>
     <div>
         <table id="post-table" border="1">
             <tr>
@@ -21,10 +24,10 @@
                 <th>time</th>
                 <th>recommend</th>
             </tr>
-            <% postdata.forEach(function(post){%>
+            <% posts.forEach(function(post){%>
             <tr id="post-list">
                 <td><%=post.id %></td>
-                <td><a href="<%="/board/view/"+boardNum+'/'+post.id%>?type=<%=type%>    "><%= post.title %></a></td>
+                <td><a href="<%="/board/"+boardName+'/'+post.id%>?type=<%=post.type%>"><%= post.title %></a></td>
                 <td><%=post.nick %></td>
                 <td><%=post.type  %></td>
                 <td><%=post.createdAt.toString().substring(15,25);  %></td>
@@ -34,15 +37,19 @@
             <%})%>
         </table>
     </div>
+    
+    <!--페이지-->
+
     <div style="text-align: center;" id="pageSelector">
         <a href="?type=<%=type%>&page=1" id="goFront"><<</a> 
         <span id="pagelist">
-            <%for(let i = 1;i <= pageLength ; i++){%>
+            <%for(let i = 1;i <= pagesLength ; i++){%>
                 | <a class="selectPage"><%=i%></a>
             <%}%>
         </span>
-        <a href="?type=<%=type%>&page=<%=pageLength%>" id="goBack">|>></a>
+        <a href="?type=<%=type%>&page=<%=pagesLength%>" id="goBack">|>></a>
     </div>
+    
     <%}else{%>
         <span>첫번째 글을 작성해주세요 </span>
     <%}%>
